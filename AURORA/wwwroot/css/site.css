@@ -1,0 +1,345 @@
+/* ─── Tokens ─────────────────────────────────────────────── */
+:root {
+    --sidebar-w: 220px;
+    --sidebar-w-collapsed: 64px;
+    --teal-50:  #E1F5EE;
+    --teal-100: #9FE1CB;
+    --teal-400: #1D9E75;
+    --teal-600: #0F6E56;
+    --bg-void:    #f5faf8;
+    --bg-panel:   #ffffff;
+    --bg-surface: #edf7f3;
+    --border:       rgba(15,110,86,0.10);
+    --text-primary: #0f2d24;
+    --text-muted:   #4a7a66;
+    --text-dim:     #a8cfc2;
+    --accent:      var(--teal-400);
+    --accent-soft: rgba(29,158,117,0.08);
+    --accent-glow: rgba(29,158,117,0.20);
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body:    'DM Sans', system-ui, sans-serif;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Reset ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-void);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow: hidden;
+    height: 100vh;
+    height: 100dvh;
+}
+
+/* ─── Shell ──────────────────────────────────────────────── */
+.aurora-shell {
+    display: flex;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+/* ─── Sidebar ────────────────────────────────────────────── */
+.aurora-sidebar {
+    position: relative;
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--bg-panel);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    transition: width var(--transition), min-width var(--transition), transform var(--transition);
+    overflow: hidden;
+    z-index: 100;
+    box-shadow: 2px 0 12px rgba(15,110,86,0.06);
+    flex-shrink: 0;
+}
+
+.aurora-sidebar.collapsed {
+    width: var(--sidebar-w-collapsed);
+    min-width: var(--sidebar-w-collapsed);
+}
+
+/* ─── Sidebar Header ─────────────────────────────────────── */
+.aurora-sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 18px 20px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.aurora-brand {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    color: var(--teal-600);
+    white-space: nowrap;
+    transition: opacity var(--transition);
+}
+
+.aurora-sidebar.collapsed .aurora-brand {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.aurora-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    transition: background var(--transition);
+}
+.aurora-toggle:hover { background: var(--accent-soft); }
+.aurora-toggle span {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: var(--text-muted);
+    border-radius: 2px;
+    transition: background var(--transition);
+}
+.aurora-toggle:hover span { background: var(--teal-600); }
+
+/* ─── Navigation ─────────────────────────────────────────── */
+.aurora-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 10px;
+    gap: 2px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+.aurora-nav::-webkit-scrollbar { display: none; }
+
+.aurora-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 10px;
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    font-size: 13.5px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    transition: background var(--transition), color var(--transition);
+    position: relative;
+}
+.aurora-nav-link:hover {
+    background: var(--accent-soft);
+    color: var(--teal-600);
+}
+.aurora-nav-link.active,
+.aurora-nav-link[aria-current="page"] {
+    background: var(--teal-50);
+    color: var(--teal-600);
+    font-weight: 500;
+}
+.aurora-nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 25%;
+    height: 50%; width: 2px;
+    background: var(--teal-400);
+    border-radius: 0 2px 2px 0;
+}
+
+.aurora-sidebar.collapsed .aurora-nav-link span {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+.aurora-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    stroke: currentColor;
+}
+
+/* ─── Divider & Logout ───────────────────────────────────── */
+.aurora-nav-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 4px;
+}
+.aurora-nav-logout { color: var(--text-dim); }
+.aurora-nav-logout:hover {
+    color: #b91c1c;
+    background: rgba(185,28,28,0.06);
+}
+
+/* ─── Glow ───────────────────────────────────────────────── */
+.aurora-glow {
+    position: absolute;
+    bottom: -40px; left: -30px;
+    width: 180px; height: 180px;
+    background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+    pointer-events: none;
+    border-radius: 50%;
+    animation: glow-pulse 6s ease-in-out infinite;
+}
+@keyframes glow-pulse {
+    0%, 100% { opacity: .4; transform: scale(1); }
+    50%       { opacity: .9; transform: scale(1.1); }
+}
+
+/* ─── Main Content ───────────────────────────────────────── */
+.aurora-main {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: var(--bg-void);
+    min-width: 0;
+}
+.aurora-content {
+    min-height: 100%;
+    padding: 2rem 2.5rem;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────── */
+.aurora-main::-webkit-scrollbar { width: 5px; }
+.aurora-main::-webkit-scrollbar-track { background: transparent; }
+.aurora-main::-webkit-scrollbar-thumb { background: var(--teal-100); border-radius: 10px; }
+.aurora-main::-webkit-scrollbar-thumb:hover { background: var(--teal-400); }
+
+/* ─── Overlay (móvil) ────────────────────────────────────── */
+.aurora-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 45, 36, 0.35);
+    backdrop-filter: blur(2px);
+    z-index: 99;
+    opacity: 0;
+    transition: opacity var(--transition);
+}
+.aurora-overlay.visible {
+    opacity: 1;
+}
+
+/* ─── Topbar móvil ───────────────────────────────────────── */
+.aurora-topbar {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 1.25rem;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    flex-shrink: 0;
+}
+.aurora-topbar-brand {
+    font-family: var(--font-display);
+    font-size: 18px;
+    letter-spacing: 0.25em;
+    color: var(--teal-600);
+}
+
+/* ─── Responsive: Tablet (≤900px) ───────────────────────── */
+@media (max-width: 900px) {
+    .aurora-sidebar {
+        /* colapsado por defecto: solo iconos */
+        width: var(--sidebar-w-collapsed);
+        min-width: var(--sidebar-w-collapsed);
+    }
+
+    .aurora-sidebar .aurora-brand {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .aurora-sidebar .aurora-nav-link span {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+    }
+
+    /* Al abrirlo con el toggle se expande */
+    .aurora-sidebar.open {
+        width: var(--sidebar-w);
+        min-width: var(--sidebar-w);
+    }
+    .aurora-sidebar.open .aurora-brand {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .aurora-sidebar.open .aurora-nav-link span {
+        opacity: 1;
+        width: auto;
+        overflow: visible;
+    }
+
+    .aurora-content { padding: 1.5rem; }
+}
+
+/* ─── Responsive: Móvil (≤600px) ────────────────────────── */
+@media (max-width: 600px) {
+    body { overflow: hidden; }
+
+    .aurora-shell { flex-direction: column; }
+
+    /* Topbar visible arriba */
+    .aurora-topbar { display: flex; }
+
+    /* Sidebar fuera de pantalla por defecto */
+    .aurora-sidebar {
+        position: fixed;
+        top: 0; left: 0;
+        height: 100dvh;
+        width: var(--sidebar-w) !important;
+        min-width: var(--sidebar-w) !important;
+        transform: translateX(-100%);
+        box-shadow: none;
+    }
+
+    /* Sidebar abierto */
+    .aurora-sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 24px rgba(15,110,86,0.15);
+    }
+    .aurora-sidebar.open .aurora-brand {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .aurora-sidebar.open .aurora-nav-link span {
+        opacity: 1;
+        width: auto;
+        overflow: visible;
+    }
+
+    /* Overlay visible cuando sidebar abierto */
+    .aurora-overlay { display: block; }
+
+    /* Main ocupa toda la pantalla */
+    .aurora-main {
+        flex: 1;
+        height: 0;
+    }
+    .aurora-content { padding: 1.25rem; }
+}
+
+/* ─── Responsive: Móvil chico (≤380px) ──────────────────── */
+@media (max-width: 380px) {
+    .aurora-content { padding: 1rem; }
+    .aurora-topbar  { padding: 12px 1rem; }
+}

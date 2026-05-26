@@ -1,0 +1,155 @@
+﻿@model AURORA.Models.Tb_UsuarioLibro
+@{
+    ViewData["Title"] = "Leer Libro";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@Model.Libro.Titulo — AURORA</title>
+    <link rel="stylesheet" href="~/css/LeerLibro.css" asp-append-version="true" />
+</head>
+<body>
+
+    <div class="lr-root">
+
+        <!-- ── Barra superior ── -->
+        <div class="lr-topbar">
+            <div class="lr-topbar-left">
+                <a asp-controller="Lector" asp-action="AbrirLibro" asp-route-id="@Model.Id" class="lr-back">
+                    <i class="ti ti-arrow-left" aria-hidden="true"></i> Volver
+                </a>
+                <div>
+                    <div class="lr-titulo">@Model.Libro.Titulo</div>
+                    <div class="lr-autor">@Model.Libro.Autor</div>
+                </div>
+            </div>
+            <div class="lr-topbar-right">
+                <form asp-action="GuardarProgreso" asp-controller="Lector" method="post" class="guardar-form">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <input type="hidden" id="paginaActual" name="pagina" value="@Model.UltimaPagina" />
+                    <button type="submit" class="lr-btn-save">
+                        <i class="ti ti-device-floppy" aria-hidden="true"></i>
+                        Guardar progreso
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ── Cuerpo ── -->
+        <div class="lr-body">
+
+            <!-- Sidebar -->
+            <div class="lr-sidebar">
+                <div>
+                    <div class="lr-sidebar-label">Progreso</div>
+                    <div class="lr-progreso-track">
+                        <div class="lr-progreso-fill"
+                             id="progresoFill"
+                             style="width: 0%"
+                             data-target="@Model.Progreso%">
+                        </div>
+                    </div>
+                    <div class="lr-progreso-nums">
+                        <span id="pagInfo">Pág. @Model.UltimaPagina / @Model.Libro.Paginas</span>
+                        <span>@Model.Progreso%</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="lr-sidebar-label">Detalles</div>
+                    <div class="lr-stat-group">
+                        <div class="lr-stat">
+                            <span class="lr-stat-k">Página actual</span>
+                            <span class="lr-stat-v" id="statPagActual">@Model.UltimaPagina</span>
+                        </div>
+                        <div class="lr-stat">
+                            <span class="lr-stat-k">Total páginas</span>
+                            <span class="lr-stat-v">@Model.Libro.Paginas</span>
+                        </div>
+                        <div class="lr-stat">
+                            <span class="lr-stat-k">Restantes</span>
+                            <span class="lr-stat-v" id="statRestantes">@(Model.Libro.Paginas - Model.UltimaPagina)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visor PDF -->
+            <div class="lr-viewer">
+                <div class="lr-page-wrap">
+                    <canvas id="pdf-render"></canvas>
+                </div>
+                <div class="lr-nav">
+                    <button id="prev" class="lr-nav-btn" aria-label="Página anterior">
+                        <i class="ti ti-chevron-left" aria-hidden="true"></i>
+                    </button>
+                    <span id="page-info" class="lr-page-info">Página @Model.UltimaPagina</span>
+                    <button id="next" class="lr-nav-btn" aria-label="Página siguiente">
+                        <i class="ti ti-chevron-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+            import * as pdfjsLib from '/lib/pdfjs/build/pdf.mjs';
+            pdfjsLib.GlobalWorkerOptions.workerSrc = '/lib/pdfjs/build/pdf.worker.mjs';
+
+            const url = '/pdfs/@Model.Libro.RutaPdf';
+            const totalPaginas = @Model.Libro.Paginas;
+            let pdfDoc = null, pageNum = @Model.UltimaPagina;
+            const canvas = document.getElementById('pdf-render');
+            const ctx = canvas.getContext('2d');
+
+            function renderPage(num) {
+                pdfDoc.getPage(num).then(page => {
+                    const container = document.querySelector('.lr-page-wrap');
+                    const containerWidth = container.clientWidth;
+
+                    // Primero obtén el viewport base (scale 1) para saber el ancho natural
+                    const baseViewport = page.getViewport({ scale: 1 });
+
+                    // Calcula el scale para que encaje exactamente en el contenedor
+                    const scale = containerWidth / baseViewport.width;
+                    const viewport = page.getViewport({ scale });
+
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    page.render({ canvasContext: ctx, viewport });
+
+                    document.getElementById('page-info').textContent = `Página ${num} de ${pdfDoc.numPages}`;
+                    document.getElementById('paginaActual').value = num;
+                    document.getElementById('statPagActual').textContent = num;
+                    document.getElementById('statRestantes').textContent = totalPaginas - num;
+
+                    const pct = Math.round(num / totalPaginas * 100);
+                    document.getElementById('progresoFill').style.width = pct + '%';
+                    document.getElementById('pagInfo').textContent = `Pág. ${num} / ${totalPaginas}`;
+                });
+            }
+
+            pdfjsLib.getDocument(url).promise.then(pdf => {
+                pdfDoc = pdf;
+                renderPage(pageNum);
+                document.getElementById('progresoFill').style.width = '@Model.Progreso%';
+            });
+
+            document.getElementById('prev').addEventListener('click', () => {
+                if (pageNum <= 1) return;
+                pageNum--;
+                renderPage(pageNum);
+            });
+
+            document.getElementById('next').addEventListener('click', () => {
+                if (pageNum >= pdfDoc.numPages) return;
+                pageNum++;
+                renderPage(pageNum);
+            });
+    </script>
+
+</body>
+</html>

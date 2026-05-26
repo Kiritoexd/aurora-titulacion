@@ -1,0 +1,423 @@
+﻿/* ─── Tokens ─────────────────────────────────────────────── */
+:root {
+    --teal-50: #E1F5EE;
+    --teal-100: #9FE1CB;
+    --teal-400: #1D9E75;
+    --teal-600: #0F6E56;
+    --bg: #f5faf8;
+    --bg-panel: #ffffff;
+    --border: rgba(15,110,86,0.10);
+    --text-primary: #0f2d24;
+    --text-muted: #4a7a66;
+    --text-dim: #a8cfc2;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --transition: 0.22s ease;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text-primary);
+}
+
+/* ─── Shell ──────────────────────────────────────────────── */
+.reg-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ─── Aside ──────────────────────────────────────────────── */
+.reg-aside {
+    flex: 0 0 38%;
+    background: var(--teal-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.reg-aside-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.reg-brand {
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    color: #fff;
+}
+
+.reg-tagline {
+    font-size: 15px;
+    color: rgba(255,255,255,0.68);
+    line-height: 1.7;
+    font-weight: 300;
+}
+
+.reg-deco {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.deco-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.10);
+}
+
+.deco-ring--1 {
+    width: 340px;
+    height: 340px;
+    bottom: -90px;
+    right: -90px;
+}
+
+.deco-ring--2 {
+    width: 210px;
+    height: 210px;
+    bottom: -30px;
+    right: -30px;
+}
+
+.deco-ring--3 {
+    width: 130px;
+    height: 130px;
+    top: 24px;
+    left: -50px;
+}
+
+/* ─── Main ───────────────────────────────────────────────── */
+.reg-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 2rem;
+    overflow-y: auto;
+}
+
+/* ─── Card ───────────────────────────────────────────────── */
+.reg-card {
+    width: 100%;
+    max-width: 440px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.reg-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.reg-title {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 400;
+    color: var(--teal-600);
+}
+
+.reg-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* ─── Form ───────────────────────────────────────────────── */
+.reg-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.reg-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.reg-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.reg-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+}
+
+.reg-input-wrap {
+    position: relative;
+}
+
+.reg-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+    .reg-input::placeholder {
+        color: var(--text-dim);
+    }
+
+    .reg-input:focus {
+        border-color: var(--teal-400);
+        box-shadow: 0 0 0 3px rgba(29,158,117,0.10);
+    }
+
+    .reg-input.input--error {
+        border-color: #e24b4a;
+        animation: shake 0.35s ease;
+    }
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-6px);
+    }
+
+    75% {
+        transform: translateX(6px);
+    }
+}
+
+/* ─── Toggle contraseña ──────────────────────────────────── */
+.reg-eye {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-dim);
+    padding: 4px;
+    display: flex;
+    transition: color var(--transition);
+}
+
+    .reg-eye:hover {
+        color: var(--teal-400);
+    }
+
+    .reg-eye svg {
+        width: 16px;
+        height: 16px;
+    }
+
+.reg-input-wrap .reg-input {
+    padding-right: 38px;
+}
+
+/* ─── Error ──────────────────────────────────────────────── */
+.reg-error {
+    font-size: 11.5px;
+    color: #b91c1c;
+}
+
+/* ─── Buttons ────────────────────────────────────────────── */
+.reg-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 11px 20px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background var(--transition), transform var(--transition);
+}
+
+    .reg-btn svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+    }
+
+    .reg-btn:active {
+        transform: scale(0.98);
+    }
+
+.reg-btn--primary {
+    background: var(--teal-400);
+    color: #fff;
+}
+
+    .reg-btn--primary:hover {
+        background: var(--teal-600);
+    }
+
+.reg-btn--secondary {
+    background: var(--teal-50);
+    color: var(--teal-600);
+    border: 1px solid var(--border);
+}
+
+    .reg-btn--secondary:hover {
+        background: var(--teal-100);
+        border-color: var(--teal-100);
+    }
+
+/* ─── Links ──────────────────────────────────────────────── */
+.reg-links {
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+}
+
+    .reg-links p {
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+
+    .reg-links a {
+        color: var(--teal-400);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color var(--transition);
+    }
+
+        .reg-links a:hover {
+            color: var(--teal-600);
+        }
+
+/* ─── CAPTCHA ────────────────────────────────────────────── */
+.captcha-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,45,36,0.35);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.captcha-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(15,110,86,0.12);
+}
+
+.captcha-icon {
+    width: 44px;
+    height: 44px;
+    background: var(--teal-50);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--teal-600);
+}
+
+    .captcha-icon svg {
+        width: 22px;
+        height: 22px;
+    }
+
+.captcha-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--teal-600);
+}
+
+.captcha-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: -4px;
+}
+
+.captcha-question {
+    font-family: var(--font-display);
+    font-size: 24px;
+    color: var(--text-primary);
+}
+
+.captcha-card .reg-input {
+    text-align: center;
+    font-size: 16px;
+}
+
+.captcha-card .reg-btn {
+    margin-top: 4px;
+}
+
+/* ─── Responsive ─────────────────────────────────────────── */
+@media (max-width: 700px) {
+    .reg-aside {
+        display: none;
+    }
+
+    .reg-main {
+        padding: 2rem 1.25rem;
+        align-items: flex-start;
+        padding-top: 3rem;
+    }
+
+    .reg-card {
+        max-width: 100%;
+    }
+
+    .reg-row {
+        grid-template-columns: 1fr;
+    }
+}
+/* ─── Warn de límite de caracteres ──────────────────────── */
+.reg-warn {
+    display: none;
+    font-size: 11.5px;
+    color: #92400e;
+    background: #fef3c7;
+    border: 1px solid #fde68a;
+    padding: 4px 8px;
+    border-radius: 4px;
+    line-height: 1.4;
+}
+
+    .reg-warn.visible {
+        display: block;
+    }

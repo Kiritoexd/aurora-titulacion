@@ -1,0 +1,137 @@
+﻿@{
+    ViewData["Title"] = "Ingresar código";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/IngresarCodigo.css" />
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+
+    <main class="wrapper">
+        <div class="card">
+
+            <div class="card__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="1.6"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+            </div>
+
+            <h1 class="card__title">Ingresa tu código</h1>
+            <p class="card__subtitle">
+                Revisá tu correo y escribe los 6 dígitos que te enviamos.
+            </p>
+
+            <form asp-action="IngresarCodigo" method="post" id="codigoForm" novalidate>
+
+                <div class="codigo-container">
+                    @for (int i = 0; i < 6; i++)
+                    {
+                        <input type="text"
+                               maxlength="1"
+                               class="codigo-input"
+                               id="codigo@(i)"
+                               name="codigo@(i)"
+                               inputmode="numeric"
+                               pattern="[0-9]*"
+                               autocomplete="off"
+                               aria-label="Dígito @(i + 1)" />
+                    }
+                </div>
+
+                <input type="hidden" id="codigoCompleto" name="codigo" />
+
+                <button type="submit" class="btn-submit" id="submitBtn" disabled>
+                    <span class="btn-submit__text">Validar código</span>
+                    <span class="btn-submit__arrow">→</span>
+                </button>
+            </form>
+
+            @if (TempData["ErrorCodigo"] != null)
+            {
+                <div class="alert-error" role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    @TempData["ErrorCodigo"]
+                </div>
+            }
+
+            <a href="/forgot-password" class="back-link">← Reenviar código</a>
+
+        </div>
+    </main>
+
+    <script>
+            const inputs     = document.querySelectorAll('.codigo-input');
+            const hidden     = document.getElementById('codigoCompleto');
+            const submitBtn  = document.getElementById('submitBtn');
+
+            function syncHidden() {
+                hidden.value = Array.from(inputs).map(i => i.value).join('');
+                submitBtn.disabled = hidden.value.length < 6;
+            }
+
+            // Foco inicial
+            inputs[0].focus();
+
+            inputs.forEach((input, idx) => {
+                input.addEventListener('input', () => {
+                    // Acepta solo dígitos
+                    input.value = input.value.replace(/[^0-9]/g, '').slice(-1);
+                    syncHidden();
+                    if (input.value && idx < inputs.length - 1) {
+                        inputs[idx + 1].focus();
+                    }
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace') {
+                        if (input.value) {
+                            input.value = '';
+                            syncHidden();
+                        } else if (idx > 0) {
+                            inputs[idx - 1].focus();
+                            inputs[idx - 1].value = '';
+                            syncHidden();
+                        }
+                        e.preventDefault();
+                    }
+                    if (e.key === 'ArrowLeft' && idx > 0)  { inputs[idx - 1].focus(); e.preventDefault(); }
+                    if (e.key === 'ArrowRight' && idx < inputs.length - 1) { inputs[idx + 1].focus(); e.preventDefault(); }
+                });
+
+                // Pegar código completo (ej. desde el correo)
+                input.addEventListener('paste', (e) => {
+                    const pasted = (e.clipboardData || window.clipboardData)
+                        .getData('text').replace(/[^0-9]/g, '').slice(0, 6);
+                    if (pasted) {
+                        pasted.split('').forEach((ch, j) => {
+                            if (inputs[j]) inputs[j].value = ch;
+                        });
+                        syncHidden();
+                        const next = inputs[Math.min(pasted.length, inputs.length - 1)];
+                        if (next) next.focus();
+                    }
+                    e.preventDefault();
+                });
+            });
+    </script>
+</body>
+</html>

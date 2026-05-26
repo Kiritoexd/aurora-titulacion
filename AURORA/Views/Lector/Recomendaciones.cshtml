@@ -1,0 +1,228 @@
+﻿@model List<AURORA.Controllers.LibroRecomendado>
+@{
+    ViewData["Title"] = "Recomendador de Libros";
+
+    var generos = new List<(string Valor, string Icono)>
+    {
+        ("Fantasía",        "wand"),
+        ("Ciencia Ficción", "rocket"),
+        ("Historia",        "building-arch"),
+        ("Filosofía",       "brain"),
+        ("Matemáticas",     "math-function"),
+        ("Romance",         "heart"),
+        ("Terror",          "ghost"),
+        ("Misterio",        "magnifier"),
+        ("Biografía",       "user"),
+        ("Psicología",      "mood-smile"),
+        ("Aventura",        "compass"),
+        ("Clásicos",        "feather"),
+        ("Economía",        "chart-bar"),
+        ("Arte",            "palette"),
+        ("Viajes",          "map"),
+        ("Naturaleza",      "leaf"),
+        ("Política",        "building"),
+        ("Tecnología",      "cpu"),
+    };
+
+    var generosPorLetra = generos
+        .GroupBy(g => g.Valor
+            .Normalize(System.Text.NormalizationForm.FormD)
+            .First(c => System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c)
+                        != System.Globalization.UnicodeCategory.NonSpacingMark)
+            .ToString().ToUpper())
+        .OrderBy(g => g.Key)
+        .ToList();
+
+    var generoSeleccionado = ViewBag.GeneroSeleccionado as string ?? "";
+}
+
+<link rel="stylesheet" href="~/css/Recomendaciones.css" asp-append-version="true" />
+
+<div class="rc-root">
+
+    <header class="rc-header">
+        <h1 class="rc-title">Recomendador de libros</h1>
+        <p class="rc-subtitle">Descubre nuevas lecturas según tu género favorito</p>
+    </header>
+
+    <main class="rc-main">
+        <div class="rc-layout">
+
+            <!-- ── Sidebar ── -->
+            <aside class="rc-sidebar">
+                <form asp-action="Recomendar" asp-controller="Recomendaciones" method="post">
+                    <span class="rc-form-label">Género</span>
+                    <div class="rc-alpha-menu">
+                        @foreach (var grupo in generosPorLetra)
+                        {
+                            var tieneActivo = grupo.Any(g => g.Valor == generoSeleccionado);
+                            <div class="rc-alpha-item @(tieneActivo ? "open" : "")">
+                                <button type="button"
+                                        class="rc-alpha-trigger"
+                                        onclick="toggleLetra(this)"
+                                        aria-expanded="@(tieneActivo ? "true" : "false")">
+                                    <span class="rc-alpha-letter">@grupo.Key</span>
+                                    <span class="rc-alpha-count">@grupo.Count()</span>
+                                    <i class="ti ti-chevron-right rc-alpha-chevron" aria-hidden="true"></i>
+                                </button>
+                                <div class="rc-alpha-panel">
+                                    <div class="rc-genres-list">
+                                        @foreach (var (valor, icono) in grupo)
+                                        {
+                                            var activo = valor == generoSeleccionado ? "active" : "";
+                                            <button type="submit"
+                                                    name="genero"
+                                                    value="@valor"
+                                                    class="rc-genre-row @activo">
+                                                <i class="ti ti-@icono" aria-hidden="true"></i>
+                                                @valor
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </form>
+            </aside>
+
+            <!-- ── Contenido ── -->
+            <section class="rc-content">
+                @if (Model != null && Model.Any())
+                {
+                    <p class="rc-results-label">
+                        Recomendaciones para <strong>@generoSeleccionado</strong>
+                    </p>
+                    <div class="rc-grid">
+                        @foreach (var libro in Model)
+                        {
+                            var amazonQuery = Uri.EscapeDataString(libro.titulo + " " + libro.autor);
+                            var amazonUrl = $"https://www.amazon.com.mx/s?k={amazonQuery}&i=stripbooks";
+
+                            <div class="rc-card">
+                                <span class="rc-card-genre">@generoSeleccionado</span>
+                                <h3 class="rc-card-titulo">@libro.titulo</h3>
+                                <p class="rc-card-autor">@libro.autor</p>
+                                <p class="rc-card-sinopsis">@libro.sinopsis</p>
+
+                                <div class="rc-actions">
+                                    <!-- Amazon -->
+                                    <a class="rc-amazon-btn"
+                                       href="@amazonUrl"
+                                       target="_blank"
+                                       rel="noopener noreferrer">
+                                        <i class="ti ti-shopping-cart" aria-hidden="true"></i>
+                                        Buscar en Amazon
+                                    </a>
+
+                                    <!-- Compartir -->
+                                    <div class="rc-share">
+                                        <a class="rc-share-btn rc-share-wa"
+                                           href="#"
+                                           data-titulo="@libro.titulo"
+                                           data-autor="@libro.autor"
+                                           data-sinopsis="@libro.sinopsis"
+                                           data-genero="@generoSeleccionado"
+                                           onclick="compartirWhatsApp(this); return false;"
+                                           title="Compartir en WhatsApp">
+                                            <i class="ti ti-brand-whatsapp" aria-hidden="true"></i>
+                                            <span>WhatsApp</span>
+                                        </a>
+                                        <button class="rc-share-btn rc-share-ig"
+                                                data-titulo="@libro.titulo"
+                                                data-autor="@libro.autor"
+                                                data-sinopsis="@libro.sinopsis"
+                                                data-genero="@generoSeleccionado"
+                                                onclick="copiarParaInstagram(this)"
+                                                title="Copiar para Instagram">
+                                            <i class="ti ti-brand-instagram" aria-hidden="true"></i>
+                                            <span>Instagram</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(generoSeleccionado))
+                {
+                    <div class="rc-empty">
+                        <i class="ti ti-book-off" aria-hidden="true"></i>
+                        <p>No se encontraron recomendaciones para <strong>@generoSeleccionado</strong>.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="rc-empty">
+                        <i class="ti ti-books" aria-hidden="true"></i>
+                        <p>Elige un género para ver tus recomendaciones.</p>
+                    </div>
+                }
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="rc-footer">
+        <p>AURORA — Tu espacio de lectura</p>
+    </footer>
+
+</div>
+
+@section Scripts {
+    <script>
+        function toggleLetra(btn) {
+            const item     = btn.closest('.rc-alpha-item');
+            const expanded = item.classList.contains('open');
+
+            document.querySelectorAll('.rc-alpha-item.open').forEach(el => {
+                el.classList.remove('open');
+                el.querySelector('.rc-alpha-trigger').setAttribute('aria-expanded', 'false');
+            });
+
+            if (!expanded) {
+                item.classList.add('open');
+                btn.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+              function buildMensaje(el) {
+            const titulo   = el.dataset.titulo;
+            const autor    = el.dataset.autor;
+            const sinopsis = el.dataset.sinopsis;
+            const genero   = el.dataset.genero;
+
+            return (
+                `*${titulo}*\n` +
+                `_${autor}_\n\n` +
+                `${sinopsis}\n\n` +
+                `Género: ${genero}\n` +
+                `Descubierto en *Aurora* — Tu espacio de lectura`
+            );
+        }
+
+        function compartirWhatsApp(el) {
+            const texto = buildMensaje(el);
+            const url   = `https://wa.me/?text=${encodeURIComponent(texto)}`;
+            window.open(url, '_blank');
+        }
+
+        function copiarParaInstagram(el) {
+            const texto = buildMensaje(el);
+            navigator.clipboard.writeText(texto).then(() => {
+                const span     = el.querySelector('span');
+                const original = span.textContent;
+                span.textContent = '¡Copiado!';
+                setTimeout(() => span.textContent = original, 2000);
+            }).catch(() => {
+                const ta = document.createElement('textarea');
+                ta.value = texto;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            });
+        }
+
+    </script>
+}

@@ -1,0 +1,513 @@
+﻿/* =========================================================
+   LOGROS.CSS  —  Sistema de Logros
+   Estética: Teal Minimalista
+   ========================================================= */
+
+/* ── Variables ─────────────────────────────────────────── */
+:root {
+    --teal-50: #E1F5EE;
+    --teal-100: #9FE1CB;
+    --teal-400: #1D9E75;
+    --teal-600: #0F6E56;
+    --bg: #f5faf8;
+    --bg-panel: #ffffff;
+    --border: rgba(15,110,86,0.10);
+    --text-primary: #0f2d24;
+    --text-muted: #4a7a66;
+    --text-dim: #a8cfc2;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --transition: 0.24s ease;
+}
+
+/* ── Reset & Base ───────────────────────────────────────── */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    padding: 0 0 4rem;
+    background-image: radial-gradient(circle, rgba(15,110,86,0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.75rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header__brand {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.header__icon {
+    font-size: 1.5rem;
+    animation: pulse 2.4s ease-in-out infinite;
+}
+
+.header__title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: .18em;
+    color: var(--teal-600);
+    text-shadow: 0 0 12px rgba(29,158,117,0.2);
+}
+
+.header__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .2rem;
+}
+
+.header__date {
+    font-size: .7rem;
+    color: var(--text-dim);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.header__reset-bar {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .72rem;
+}
+
+.header__reset-label {
+    color: var(--text-muted);
+}
+
+.header__countdown {
+    color: var(--teal-400);
+    font-weight: 500;
+    font-size: .78rem;
+}
+
+/* ── Progreso global ────────────────────────────────────── */
+.progreso-global {
+    margin: 1.25rem 1.75rem .5rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.progreso-global__info {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: .6rem;
+}
+
+.progreso-global__label {
+    font-size: .75rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.progreso-global__fraccion {
+    font-size: .88rem;
+    color: var(--teal-400);
+    font-weight: 500;
+}
+
+.progreso-global__barra-bg {
+    height: 6px;
+    background: #e0ede9;
+    border-radius: 99px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.progreso-global__barra-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--teal-400), var(--teal-600));
+    border-radius: 99px;
+    transition: width .6s ease;
+    box-shadow: 0 0 8px rgba(29,158,117,0.25);
+}
+
+/* ── Tabs ───────────────────────────────────────────────── */
+.tabs {
+    display: flex;
+    margin: 1rem 1.75rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: .6rem 1rem;
+    cursor: pointer;
+    margin-bottom: -1px;
+    transition: color var(--transition), border-color var(--transition);
+}
+
+    .tab:hover {
+        color: var(--text-primary);
+    }
+
+.tab--active {
+    color: var(--teal-600);
+    border-bottom-color: var(--teal-600);
+}
+
+/* ── Panels ─────────────────────────────────────────────── */
+.panel {
+    display: none;
+    padding: 1.25rem 1.75rem;
+}
+
+.panel--active {
+    display: block;
+}
+
+.panel__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .75rem;
+    padding: 3rem 1rem;
+    color: var(--text-dim);
+    font-size: .88rem;
+}
+
+.panel__empty-icon {
+    font-size: 2.5rem;
+}
+
+/* ── Grid ───────────────────────────────────────────────── */
+.logros-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+}
+
+/* ── Tarjeta de logro ───────────────────────────────────── */
+.logro-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .55rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+    animation: cardIn .35s ease both;
+}
+
+    .logro-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--teal-400);
+        box-shadow: 0 0 20px rgba(29,158,117,0.12);
+    }
+
+/* completado (reclamado) */
+.logro-card--completado {
+    border-color: var(--teal-600);
+    background: #E1F5EE;
+}
+
+    .logro-card--completado::after {
+        content: '✓';
+        position: absolute;
+        top: .6rem;
+        right: .8rem;
+        color: var(--teal-600);
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+/* listo para reclamar */
+.logro-card--listo {
+    border-color: var(--teal-400);
+    box-shadow: 0 0 16px rgba(29,158,117,0.15);
+    animation: cardIn .35s ease both, glow 1.8s ease-in-out infinite;
+}
+
+/* header tarjeta */
+.logro-card__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.logro-card__icono {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.logro-card__badge {
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: .2rem .5rem;
+    border-radius: 99px;
+    border: 1px solid;
+}
+
+.logro-card[data-tipo="diario"] .logro-card__badge {
+    color: var(--teal-400);
+    border-color: var(--teal-400);
+    background: rgba(29,158,117,0.08);
+}
+
+.logro-card[data-tipo="permanente"] .logro-card__badge {
+    color: #7c5cbf;
+    border-color: #7c5cbf;
+    background: rgba(124,92,191,0.08);
+}
+
+.logro-card[data-tipo="especial"] .logro-card__badge {
+    color: var(--teal-600);
+    border-color: var(--teal-600);
+    background: rgba(15,110,86,0.08);
+}
+
+.logro-card__nombre {
+    font-family: var(--font-display);
+    font-size: .92rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: .02em;
+    line-height: 1.3;
+}
+
+.logro-card__desc {
+    font-size: .75rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+}
+
+/* barra de progreso individual */
+.logro-card__progreso {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.logro-card__barra-bg {
+    flex: 1;
+    height: 5px;
+    background: #e0ede9;
+    border-radius: 99px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.logro-card__barra-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--teal-400), var(--teal-600));
+    border-radius: 99px;
+    transition: width .5s ease;
+}
+
+.logro-card--completado .logro-card__barra-fill {
+    background: linear-gradient(90deg, var(--teal-600), var(--teal-400));
+    width: 100% !important;
+}
+
+.logro-card__fraccion {
+    font-size: .68rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+    min-width: 2.5rem;
+    text-align: right;
+}
+
+/* botón reclamar */
+.logro-card__btn {
+    margin-top: .2rem;
+    background: var(--teal-400);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-display);
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: .45rem .9rem;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+    .logro-card__btn:hover {
+        opacity: .9;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px rgba(29,158,117,0.25);
+    }
+
+    .logro-card__btn:disabled,
+    .logro-card__btn--reclamado {
+        background: #e0ede9;
+        color: var(--text-dim);
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+    }
+
+/* ── Toast ──────────────────────────────────────────────── */
+.toast {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    background: var(--bg-panel);
+    border: 1px solid var(--teal-400);
+    border-radius: var(--radius-md);
+    padding: .85rem 1.1rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1), 0 0 20px rgba(29,158,117,0.15);
+    max-width: 320px;
+    transform: translateY(120%) scale(.95);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .35s ease, opacity .35s ease;
+    z-index: 999;
+}
+
+.toast--visible {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.toast__icon {
+    font-size: 1.4rem;
+}
+
+.toast__body {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+}
+
+.toast__titulo {
+    font-family: var(--font-display);
+    font-size: .85rem;
+    color: var(--teal-600);
+    letter-spacing: .04em;
+}
+
+.toast__msg {
+    font-size: .75rem;
+    color: var(--text-muted);
+}
+
+/* ── Animaciones ────────────────────────────────────────── */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .55;
+    }
+}
+
+@keyframes cardIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 16px rgba(29,158,117,0.12);
+    }
+
+    50% {
+        box-shadow: 0 0 28px rgba(29,158,117,0.28);
+    }
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .header {
+        padding: 1rem;
+        flex-wrap: wrap;
+        gap: .5rem;
+    }
+
+    .progreso-global {
+        margin: 1rem;
+    }
+
+    .tabs {
+        margin: .75rem 1rem 0;
+    }
+
+    .panel {
+        padding: 1rem;
+    }
+
+    .logros-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.logro-card__icono svg {
+    width: 2rem;
+    height: 2rem;
+    stroke-width: 1.8;
+}
+
+.logro-card[data-tipo="diario"] .logro-card__icono svg {
+    stroke: var(--teal-400);
+}
+
+.logro-card[data-tipo="permanente"] .logro-card__icono svg {
+    stroke: #7c5cbf;
+}
+
+.logro-card[data-tipo="especial"] .logro-card__icono svg {
+    stroke: var(--teal-600);
+}

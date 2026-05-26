@@ -1,0 +1,184 @@
+﻿@model AURORA.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Inicio de sesión";
+    Layout = null;
+}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+
+<div class="login-shell">
+
+    <!-- Panel izquierdo decorativo -->
+    <div class="login-aside">
+        <div class="login-aside-inner">
+            <span class="login-brand">AURORA</span>
+            <p class="login-tagline">Tu espacio para leer,<br>crecer y recordar.</p>
+            <div class="login-deco" aria-hidden="true">
+                <div class="deco-ring deco-ring--1"></div>
+                <div class="deco-ring deco-ring--2"></div>
+                <div class="deco-ring deco-ring--3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel derecho: formulario -->
+    <div class="login-main">
+        <div class="login-card">
+
+            <div class="login-card-header">
+                <h1 class="login-title">Bienvenido</h1>
+                <p class="login-sub">Ingresa tus datos para continuar</p>
+            </div>
+
+            @if (TempData["Mensaje"] != null)
+            {
+                <div class="login-alert login-alert--ok">@TempData["Mensaje"]</div>
+            }
+
+            @Html.ValidationSummary(true, "", new { @class = "login-validation" })
+
+            <form asp-action="Login" method="post" id="loginForm" class="login-form">
+                @Html.AntiForgeryToken()
+
+                <div class="login-field">
+                    <label class="login-label" for="email">Correo electrónico</label>
+                    <input asp-for="Email" id="email" type="email"
+                           placeholder="usuario@correo.com"
+                           class="login-input" maxlength="50" autocomplete="email" />
+                    <span class="login-warn" id="warning">
+                        Máximo 45 caracteres antes del dominio
+                    </span>
+                    <span asp-validation-for="Email" class="login-error"></span>
+                </div>
+
+                <div class="login-field">
+                    <label class="login-label" for="password">Contraseña</label>
+                    <div class="login-input-wrap">
+                        <input asp-for="Password" id="password" type="password"
+                               placeholder="••••••••"
+                               class="login-input" maxlength="20" autocomplete="current-password" />
+                        <button type="button" class="login-eye" id="togglePwd" aria-label="Mostrar contraseña">
+                            <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="login-warn" id="warningPassword">
+                        La contraseña tiene un máximo de 20 caracteres
+                    </span>
+                    <span asp-validation-for="Password" class="login-error"></span>
+                </div>
+
+                <input type="hidden" name="captchaRespuesta" id="captchaRespuesta" />
+
+                <button type="button" id="btnCaptcha" class="login-btn login-btn--secondary"
+                        onclick="abrirCaptcha()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    Verificación humana
+                </button>
+
+                <button type="submit" id="btnLogin" class="login-btn login-btn--primary">
+                    Entrar
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </form>
+
+            <div class="login-links">
+                <p>
+                    ¿No tienes cuenta?
+                    <a asp-controller="Usuario" asp-action="Registro">Crear cuenta</a>
+                </p>
+                <p>
+                    ¿Olvidaste tu contraseña?
+                    <a asp-controller="Usuario" asp-action="ForgotPassword">Recuperar contraseña</a>
+                </p>
+            </div>
+
+            <!-- Solo desarrollo -->
+            <div class="login-links" style="margin-top:8px;padding-top:12px;border-top:1px solid rgba(128,128,128,.2)">
+                <p>
+                    <a asp-controller="Usuario" asp-action="LoginAdmin"
+                       style="color:#888;font-size:12px;">
+                         Acceso rápido admin (dev)
+                    </a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal CAPTCHA -->
+<div id="captchaModal" class="captcha-overlay" role="dialog" aria-modal="true" aria-labelledby="captchaTitle">
+    <div class="captcha-card">
+        <div class="captcha-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+        </div>
+        <h2 class="captcha-title" id="captchaTitle">Verificación</h2>
+        <p class="captcha-sub">Resuelve la operación para continuar</p>
+        <p class="captcha-question" id="captchaPregunta"></p>
+        <input type="text" id="captchaInput" placeholder="Tu respuesta"
+               class="login-input" inputmode="numeric" />
+        <button class="login-btn login-btn--primary" onclick="validarCaptcha()">Validar</button>
+    </div>
+</div>
+
+<script>
+    // ── Warnings de longitud
+    document.getElementById("email").addEventListener("input", function () {
+        document.getElementById("warning").classList.toggle("visible", this.value.length >= 45);
+    });
+    document.getElementById("password").addEventListener("input", function () {
+        document.getElementById("warningPassword").classList.toggle("visible", this.value.length >= 20);
+    });
+
+    // ── Toggle contraseña visible
+    document.getElementById("togglePwd").addEventListener("click", function () {
+        const pwd = document.getElementById("password");
+        const icon = document.getElementById("eyeIcon");
+        if (pwd.type === "password") {
+            pwd.type = "text";
+            icon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>`;
+        } else {
+            pwd.type = "password";
+            icon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+        }
+    });
+
+    // ── CAPTCHA
+    const a = Math.floor(Math.random() * 10) + 1;
+    const b = Math.floor(Math.random() * 10) + 1;
+    const resultado = a + b;
+    document.getElementById("captchaPregunta").textContent = `¿Cuánto es ${a} + ${b}?`;
+    document.getElementById("captchaModal").style.display  = "none";
+    document.getElementById("btnLogin").style.display      = "none";
+
+    function abrirCaptcha() {
+        document.getElementById("captchaModal").style.display = "flex";
+        document.getElementById("captchaInput").focus();
+    }
+
+    function validarCaptcha() {
+        if (parseInt(document.getElementById("captchaInput").value) === resultado) {
+            document.getElementById("captchaRespuesta").value         = resultado;
+            document.getElementById("captchaModal").style.display     = "none";
+            document.getElementById("btnCaptcha").style.display       = "none";
+            document.getElementById("btnLogin").style.display         = "flex";
+        } else {
+            document.getElementById("captchaInput").classList.add("input--error");
+            setTimeout(() => document.getElementById("captchaInput").classList.remove("input--error"), 600);
+        }
+    }
+
+    document.getElementById("captchaInput").addEventListener("keypress", e => {
+        if (e.key === "Enter") { e.preventDefault(); validarCaptcha(); }
+    });
+</script>

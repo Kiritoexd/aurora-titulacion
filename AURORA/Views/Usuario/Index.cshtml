@@ -1,0 +1,177 @@
+﻿@{
+    ViewData["Title"] = "Bienvenida";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AURORA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/Bienvenida.css" asp-append-version="true" />
+</head>
+<body>
+
+    <!-- ── Hero ── -->
+    <section class="hero">
+        <div class="hero-bg" aria-hidden="true">
+            <div class="hero-ring hero-ring--1"></div>
+            <div class="hero-ring hero-ring--2"></div>
+            <div class="hero-ring hero-ring--3"></div>
+            <div class="hero-glow"></div>
+        </div>
+
+        <nav class="hero-nav">
+            <span class="nav-brand">AURORA</span>
+            <div class="nav-links">
+                <a asp-controller="Usuario" asp-action="Login" class="nav-btn nav-btn--ghost">Iniciar sesión</a>
+                <a asp-controller="Usuario" asp-action="Registro" class="nav-btn nav-btn--solid">Registrarse</a>
+            </div>
+        </nav>
+
+        <div class="hero-body">
+            <p class="hero-eyebrow">Tu biblioteca digital</p>
+            <h1 class="hero-title">Lee más.<br><em>Vive mejor.</em></h1>
+            <p class="hero-desc">Aurora transforma tus PDFs en una experiencia de lectura moderna, con estadísticas, rachas y recomendaciones personalizadas.</p>
+            <div class="hero-ctas">
+                <a asp-controller="Usuario" asp-action="Registro" class="cta cta--primary">
+                    Empezar gratis
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+                <a asp-controller="Usuario" asp-action="Login" class="cta cta--secondary">
+                    Ya tengo cuenta
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-scroll" aria-hidden="true">
+            <span>Descubre más</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- ── Features ── -->
+    <section class="features" id="features">
+        <div class="features-inner">
+            <p class="section-eyebrow">¿Qué es Aurora?</p>
+            <h2 class="section-title">Transforma tu lectura</h2>
+
+            <div class="features-grid">
+                <div class="feat-card feat-card--accent">
+                    <div class="feat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M4 19V5a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v13" />
+                            <path d="M4 19a2 2 0 0 0 2 2h13a1 1 0 0 0 1-1" />
+                            <line x1="9" y1="10" x2="15" y2="10" />
+                        </svg>
+                    </div>
+                    <h3>Biblioteca personal</h3>
+                    <p>Importa tus PDFs y organízalos por estado: pendiente, leyendo o terminado.</p>
+                </div>
+
+                <div class="feat-card">
+                    <div class="feat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg>
+                    </div>
+                    <h3>Estadísticas reales</h3>
+                    <p>Visualiza tu tiempo de lectura, géneros favoritos y progreso mensual.</p>
+                </div>
+
+                <div class="feat-card">
+                    <div class="feat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M13 2L4.5 13.5H11L10 22l8.5-11.5H13L14 2z" />
+                        </svg>
+                    </div>
+                    <h3>Rachas y logros</h3>
+                    <p>Mantén el hábito con rachas diarias y desbloquea logros por tu constancia.</p>
+                </div>
+
+                <div class="feat-card">
+                    <div class="feat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="3" />
+                            <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" />
+                        </svg>
+                    </div>
+                    <h3>IA integrada</h3>
+                    <p>Obtén recomendaciones y resúmenes inteligentes con nuestro asistente de lectura.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── CTA final ── -->
+    <section class="final-cta">
+        <div class="final-cta-inner">
+            <h2 class="final-cta-title">¿Listo para empezar?</h2>
+            <p class="final-cta-sub">Únete a Aurora y convierte la lectura en un hábito que transforma.</p>
+            <a asp-controller="Usuario" asp-action="Registro" class="cta cta--primary">
+                Crear mi cuenta
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- ── Footer ── -->
+    <footer class="site-footer">
+        <span class="footer-brand">AURORA</span>
+        <span class="footer-copy">© 2026 Aurora App. Todos los derechos reservados.</span>
+        <button class="footer-terms" id="openTerminos">Términos y condiciones</button>
+    </footer>
+
+    <!-- ── Modal Términos ── -->
+    <div id="terminosModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="terminosTitle">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2 class="modal-title" id="terminosTitle">Términos y condiciones</h2>
+                <button class="modal-close" id="closeTerminos" aria-label="Cerrar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <p class="modal-body">
+                Aurora es una biblioteca digital que permite a los usuarios subir y gestionar archivos en formato PDF.
+                El usuario es el único responsable del contenido que sube. Aurora no se hace responsable de verificar
+                si los documentos cuentan con derechos de autor o licencias de distribución. Al utilizar la plataforma,
+                aceptas que cualquier archivo cargado es bajo tu responsabilidad y que Aurora únicamente provee
+                el espacio de lectura y organización.
+            </p>
+            <button class="cta cta--primary modal-cta" id="closeTerminos2">Entendido</button>
+        </div>
+    </div>
+
+    <script>
+            // ── Scroll fade
+            const fadeEls = document.querySelectorAll('.feat-card, .final-cta-inner');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(e => e.target.classList.toggle('in-view', e.isIntersecting));
+            }, { threshold: 0.15 });
+            fadeEls.forEach(el => observer.observe(el));
+
+            // ── Modal
+            const modal     = document.getElementById("terminosModal");
+            const openBtn   = document.getElementById("openTerminos");
+            const closeBtn  = document.getElementById("closeTerminos");
+            const closeBtn2 = document.getElementById("closeTerminos2");
+
+            const openModal  = () => modal.classList.add("open");
+            const closeModal = () => modal.classList.remove("open");
+
+            openBtn.addEventListener("click",  openModal);
+            closeBtn.addEventListener("click", closeModal);
+            closeBtn2.addEventListener("click", closeModal);
+            modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
+    </script>
+</body>
+</html>

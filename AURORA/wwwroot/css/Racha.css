@@ -1,0 +1,271 @@
+﻿/* ─── Wrapper ────────────────────────────────────────────── */
+.racha-wrapper {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2rem 0 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+/* ─── Hero ───────────────────────────────────────────────── */
+.racha-hero {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+}
+
+.racha-flame-wrap {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.racha-flame {
+    width: 56px;
+    height: 70px;
+    position: relative;
+    z-index: 1;
+    animation: flame-flicker 3s ease-in-out infinite;
+}
+
+@keyframes flame-flicker {
+    0%, 100% {
+        transform: scaleX(1) rotate(-1deg);
+    }
+
+    33% {
+        transform: scaleX(1.04) rotate(1deg);
+    }
+
+    66% {
+        transform: scaleX(0.97) rotate(-0.5deg);
+    }
+}
+
+.racha-glow-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(29,158,117,0.15) 0%, transparent 70%);
+    animation: glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+.racha-hero-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.racha-days-num {
+    font-family: var(--font-display);
+    font-size: 64px;
+    font-weight: 400;
+    color: var(--teal-600);
+    line-height: 1;
+}
+
+.racha-days-label {
+    font-size: 14px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.racha-message {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* ─── Progress ───────────────────────────────────────────── */
+.racha-progress-section {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.racha-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.racha-progress-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.racha-progress-fraction {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.racha-bar-track {
+    width: 100%;
+    height: 8px;
+    background: var(--teal-50);
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+.racha-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal-100), var(--teal-400));
+    border-radius: 100px;
+    transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+}
+
+.racha-remaining {
+    font-size: 12.5px;
+    color: var(--text-muted);
+}
+
+    .racha-remaining strong {
+        color: var(--teal-600);
+        font-weight: 500;
+    }
+
+/* ─── Logros ─────────────────────────────────────────────── */
+.racha-logros-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--teal-600);
+    margin-bottom: 1rem;
+}
+
+.racha-logros-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.logro-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: #fff;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+    .logro-card.logro--on {
+        border-color: var(--teal-100);
+        background: var(--teal-50);
+    }
+
+        .logro-card.logro--on:hover {
+            box-shadow: 0 4px 16px rgba(15,110,86,0.10);
+        }
+
+    .logro-card.logro--off {
+        opacity: 0.55;
+    }
+
+.logro-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.logro--on .logro-icon {
+    background: var(--teal-100);
+    color: var(--teal-600);
+}
+
+.logro--off .logro-icon {
+    background: var(--bg-surface, #edf7f3);
+    color: var(--text-dim);
+}
+
+.logro-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.logro-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.logro-nombre {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.logro-dias {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.logro-badge {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--teal-400);
+    color: #fff;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.logro-lock {
+    color: var(--text-dim);
+    flex-shrink: 0;
+}
+
+    .logro-lock svg {
+        width: 16px;
+        height: 16px;
+    }
+
+/* ─── Responsive ─────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .racha-days-num {
+        font-size: 48px;
+    }
+
+    .racha-hero {
+        padding: 2rem 1.25rem;
+    }
+}

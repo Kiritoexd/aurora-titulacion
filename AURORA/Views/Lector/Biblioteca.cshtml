@@ -1,0 +1,136 @@
+﻿@model AURORA.Models.LibrosViewModel
+
+<link rel="stylesheet" href="~/css/Biblioteca.css" asp-append-version="true" />
+
+<div class="bib-wrapper">
+
+    <!-- Header -->
+    <div class="bib-header">
+        <h1 class="bib-title">Mi Biblioteca</h1>
+
+        <!-- Importar PDF -->
+        <form asp-action="ImportarPdf" asp-controller="Lector" method="post"
+              enctype="multipart/form-data" class="bib-import-form">
+            <label class="bib-file-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="12" y1="18" x2="12" y2="12" />
+                    <line x1="9" y1="15" x2="15" y2="15" />
+                </svg>
+                <span class="bib-file-text">Elige un PDF</span>
+                <input type="file" name="pdfLibro" accept=".pdf" required
+                       class="bib-file-input" id="pdfInput" />
+            </label>
+
+            <select name="genero" required class="bib-select">
+                <option value="">Género</option>
+                <option value="Fantasía">Fantasía</option>
+                <option value="Ciencia Ficción">Ciencia Ficción</option>
+                <option value="Romance">Romance</option>
+                <option value="Misterio">Misterio</option>
+                <option value="Historia">Historia</option>
+                <option value="Otro">Otro</option>
+            </select>
+
+            <button type="submit" class="bib-btn-import">Importar</button>
+        </form>
+    </div>
+
+    <!-- Estantes -->
+    <div class="bib-shelves">
+        @foreach (var categoria in new[] { "Leyendo", "Pendientes", "Terminados" })
+        {
+            var lista = categoria == "Pendientes" ? Model.Pendientes :
+                        categoria == "Leyendo" ? Model.Leyendo :
+                        Model.Completados;
+
+            <section class="bib-section">
+                <div class="bib-section-header">
+                    <span class="bib-section-label">@categoria</span>
+                    <span class="bib-section-count">@lista.Count()</span>
+                </div>
+
+                @if (!lista.Any())
+                {
+                    <div class="bib-empty">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                            <path d="M4 19V5a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v13" />
+                            <path d="M4 19a2 2 0 0 0 2 2h13a1 1 0 0 0 1-1" />
+                            <line x1="9" y1="10" x2="15" y2="10" />
+                        </svg>
+                        <p>Sin libros aquí todavía</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="bib-grid">
+                        @foreach (var libro in lista)
+                        {
+                            <div class="bib-card">
+                                <!-- Portada -->
+                                <a class="bib-cover" href="/Lector/AbrirLibro/@libro.Libro.Id">
+                                    <div class="bib-cover-spine"></div>
+                                    <div class="bib-cover-body">
+                                        <span class="bib-cover-title">@libro.Libro.Titulo</span>
+                                        <span class="bib-cover-author">@libro.Libro.Autor</span>
+                                    </div>
+                                    @if (categoria == "Leyendo")
+                                    {
+                                        <div class="bib-progress-bar">
+                                            <div class="bib-progress-fill" style="width: @libro.Progreso%"></div>
+                                        </div>
+                                        <span class="bib-progress-label">@libro.Progreso%</span>
+                                    }
+                                </a>
+
+                                <!-- Info -->
+                                <div class="bib-info">
+                                    <p class="bib-info-title">@libro.Libro.Titulo</p>
+                                    <p class="bib-info-meta">@libro.Libro.Autor</p>
+                                    @if (categoria != "Leyendo")
+                                    {
+                                        <p class="bib-info-meta">@libro.Libro.Genero · @libro.Libro.Año</p>
+                                    }
+                                </div>
+
+                                <!-- Acciones -->
+                                <div class="bib-actions">
+                                    <form asp-action="LeerLibro" asp-controller="Lector" method="get">
+                                        <input type="hidden" name="id" value="@libro.Libro.Id" />
+                                        <button type="submit" class="bib-btn-read">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                                            </svg>
+                                            Leer
+                                        </button>
+                                    </form>
+                                    <form asp-action="EliminarPdf" asp-controller="Lector" method="post">
+                                        <input type="hidden" name="id" value="@libro.Libro.Id" />
+                                        <button type="submit" class="bib-btn-delete">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                <polyline points="3 6 5 6 21 6" />
+                                                <path d="M19 6l-1 14H6L5 6" />
+                                                <path d="M10 11v6M14 11v6" />
+                                                <path d="M9 6V4h6v2" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </section>
+        }
+    </div>
+</div>
+
+<script>
+    const input = document.getElementById('pdfInput');
+    const label = document.querySelector('.bib-file-text');
+    input?.addEventListener('change', () => {
+        label.textContent = input.files[0]?.name ?? 'Elige un PDF';
+    });
+</script>

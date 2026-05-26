@@ -1,0 +1,322 @@
+﻿
+
+:root {
+    --teal-50: #E1F5EE;
+    --teal-100: #9FE1CB;
+    --teal-400: #1D9E75;
+    --teal-600: #0F6E56;
+    --gray-50: #F1EFE8;
+    --gray-100: #D3D1C7;
+    --gray-600: #5F5E5A;
+    --red-50: #FCEBEB;
+    --red-200: #F09595;
+    --red-600: #A32D2D;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+}
+
+/* ─── Wrapper ─── */
+.perfil-wrapper {
+    font-family: var(--font-body);
+    max-width: 860px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* ─── Encabezado ─── */
+.perfil-header {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 0.5px solid rgba(0,0,0,0.1);
+}
+
+.foto-wrapper {
+    flex-shrink: 0;
+}
+
+.perfil-foto-circle {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: var(--teal-50);
+    border: 1px solid var(--teal-100);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.perfil-foto {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.perfil-header-info {
+    flex: 1;
+}
+
+.perfil-nombre {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 400;
+    margin: 0 0 3px;
+    line-height: 1.2;
+    color: #1a1a1a;
+}
+
+.perfil-email {
+    font-size: 13px;
+    color: #777;
+    margin: 0 0 10px;
+}
+
+.perfil-fecha-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    background: var(--gray-50);
+    color: var(--gray-600);
+    padding: 3px 10px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--gray-100);
+}
+
+    .perfil-fecha-badge i {
+        font-size: 12px;
+    }
+
+/* ─── Grid ─── */
+.perfil-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+@media (max-width: 640px) {
+    .perfil-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .perfil-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ─── Tarjeta base ─── */
+.card.perfil-card {
+    background: #fff;
+    border: 0.5px solid rgba(0,0,0,0.1);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    box-shadow: none;
+}
+
+.pcard-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #aaa;
+    margin: 0 0 1rem;
+}
+
+/* ─── Formulario de edición ─── */
+.perfil-form label {
+    display: block;
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 4px;
+    margin-top: 10px;
+}
+
+    .perfil-form label:first-of-type {
+        margin-top: 0;
+    }
+
+.perfil-form input {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-family: var(--font-body);
+    background: #f9f9f9;
+    border: 0.5px solid rgba(0,0,0,0.12);
+    border-radius: var(--radius-md);
+    color: #1a1a1a;
+    box-sizing: border-box;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+}
+
+    .perfil-form input:focus {
+        border-color: var(--teal-400);
+        box-shadow: 0 0 0 3px rgba(29,158,117,0.1);
+    }
+
+.btn-guardar {
+    width: 100%;
+    margin-top: 14px;
+    padding: 9px;
+    font-size: 13px;
+    font-family: var(--font-body);
+    font-weight: 500;
+    background: var(--teal-400);
+    color: var(--teal-50);
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+}
+
+    .btn-guardar:hover {
+        background: var(--teal-600);
+    }
+
+    .btn-guardar:active {
+        transform: scale(0.99);
+    }
+
+/* ─── Subir foto ─── */
+.foto-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 0.5px solid rgba(0,0,0,0.08);
+}
+
+.input-file {
+    font-size: 11px;
+    color: #888;
+    flex: 1;
+    min-width: 0;
+}
+
+.btn-foto {
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: var(--font-body);
+    white-space: nowrap;
+    background: transparent;
+    border: 0.5px solid rgba(0,0,0,0.15);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: #333;
+    transition: background 0.15s;
+}
+
+    .btn-foto:hover {
+        background: #f5f5f5;
+    }
+
+/* ─── Racha ─── */
+.racha-nums {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.racha-big {
+    font-family: var(--font-display);
+    font-size: 48px;
+    color: var(--teal-400);
+    line-height: 1;
+}
+
+.racha-unit {
+    font-size: 13px;
+    color: #888;
+}
+
+.racha-bar {
+    height: 6px;
+    background: #eee;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.racha-progreso {
+    height: 100%;
+    background: var(--teal-400);
+    border-radius: 99px;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.racha-meta {
+    font-size: 11px;
+    color: #aaa;
+}
+
+/* ─── Acciones ─── */
+.perfil-card.acciones {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.btn-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 9px;
+    font-size: 13px;
+    font-family: var(--font-body);
+    font-weight: 500;
+    background: transparent;
+    color: var(--red-600);
+    border: 0.5px solid var(--red-200);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.15s;
+    box-sizing: border-box;
+}
+
+    .btn-logout:hover {
+        background: var(--red-50);
+    }
+
+    .btn-logout i {
+        font-size: 15px;
+    }
+
+/* ── racha restantes y link ──────────────────── */
+.racha-restantes {
+    font-size: .78rem;
+    color: var(--text-muted, #9FE1CB);
+    margin-top: .25rem;
+    display: block;
+}
+
+    .racha-restantes strong {
+        color: var(--teal-400, #1D9E75);
+    }
+
+.racha-ver-mas {
+    display: inline-block;
+    margin-top: .85rem;
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--teal-400, #1D9E75);
+    text-decoration: none;
+    letter-spacing: .02em;
+    transition: opacity 200ms ease;
+}
+
+    .racha-ver-mas:hover {
+        opacity: .75;
+    }

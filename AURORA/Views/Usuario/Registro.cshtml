@@ -1,0 +1,196 @@
+﻿@model AURORA.Models.Tb_Usuario
+@{
+    ViewData["Title"] = "Registro";
+    Layout = null;
+}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="~/css/registro.css" asp-append-version="true" />
+
+<div class="reg-shell">
+
+    <div class="reg-aside">
+        <div class="reg-aside-inner">
+            <span class="reg-brand">AURORA</span>
+            <p class="reg-tagline">Cada libro es un mundo.<br>El tuyo empieza aquí.</p>
+            <div class="reg-deco" aria-hidden="true">
+                <div class="deco-ring deco-ring--1"></div>
+                <div class="deco-ring deco-ring--2"></div>
+                <div class="deco-ring deco-ring--3"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="reg-main">
+        <div class="reg-card">
+
+            <div class="reg-header">
+                <h1 class="reg-title">Crear cuenta</h1>
+                <p class="reg-sub">Completa tus datos para comenzar</p>
+            </div>
+
+            <form asp-action="Registro" method="post" class="reg-form">
+                @Html.AntiForgeryToken()
+
+                <div class="reg-field">
+                    <label class="reg-label" for="Nombres">Nombre(s)</label>
+                    <input asp-for="Nombres" id="Nombres" class="reg-input"
+                           placeholder="Tu nombre" autocomplete="given-name"
+                           maxlength="15" />
+                    <span class="reg-warn" id="warnNombres">Máximo 15 caracteres para el nombre</span>
+                    <span asp-validation-for="Nombres" class="reg-error"></span>
+                </div>
+
+                <div class="reg-row">
+                    <div class="reg-field">
+                        <label class="reg-label" for="ApellidoPaterno">Apellido paterno</label>
+                        <input asp-for="ApellidoPaterno" id="ApellidoPaterno" class="reg-input"
+                               placeholder="Paterno" autocomplete="family-name"
+                               maxlength="10" />
+                        <span class="reg-warn" id="warnPaterno">Máximo 10 caracteres</span>
+                        <span asp-validation-for="ApellidoPaterno" class="reg-error"></span>
+                    </div>
+                    <div class="reg-field">
+                        <label class="reg-label" for="ApellidoMaterno">Apellido materno</label>
+                        <input asp-for="ApellidoMaterno" id="ApellidoMaterno" class="reg-input"
+                               placeholder="Materno"
+                               maxlength="10" />
+                        <span class="reg-warn" id="warnMaterno">Máximo 10 caracteres</span>
+                        <span asp-validation-for="ApellidoMaterno" class="reg-error"></span>
+                    </div>
+                </div>
+
+                <div class="reg-field">
+                    <label class="reg-label" for="Email">Correo electrónico</label>
+                    <input asp-for="Email" id="Email" type="email" class="reg-input"
+                           placeholder="usuario@correo.com" autocomplete="email"
+                           maxlength="40" />
+                    <span class="reg-warn" id="warnEmail">Máximo 40 caracteres para el correo</span>
+                    <span asp-validation-for="Email" class="reg-error"></span>
+                </div>
+
+                <div class="reg-field">
+                    <label class="reg-label" for="Password">Contraseña</label>
+                    <div class="reg-input-wrap">
+                        <input asp-for="Password" id="Password" type="password"
+                               class="reg-input" placeholder="••••••••"
+                               autocomplete="new-password"
+                               maxlength="20" />
+                        <button type="button" class="reg-eye" id="togglePwd" aria-label="Mostrar contraseña">
+                            <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="reg-warn" id="warnPassword">Máximo 20 caracteres para la contraseña</span>
+                    <span asp-validation-for="Password" class="reg-error"></span>
+                </div>
+
+                <input type="hidden" name="captchaRespuesta" id="captchaRespuesta" />
+
+                <button type="button" id="btnCaptcha"
+                        class="reg-btn reg-btn--secondary" onclick="abrirCaptcha()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    Verificación humana
+                </button>
+
+                <button type="submit" id="btnRegistro"
+                        class="reg-btn reg-btn--primary" style="display:none;">
+                    Crear cuenta
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </form>
+
+            <div class="reg-links">
+                <p>
+                    ¿Ya tienes cuenta?
+                    <a asp-controller="Usuario" asp-action="Login">Inicia sesión</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal CAPTCHA -->
+<div id="captchaModal" class="captcha-overlay" role="dialog" aria-modal="true" aria-labelledby="captchaTitle">
+    <div class="captcha-card">
+        <div class="captcha-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+        </div>
+        <h2 class="captcha-title" id="captchaTitle">Verificación</h2>
+        <p class="captcha-sub">Resuelve la operación para continuar</p>
+        <p class="captcha-question" id="captchaPregunta"></p>
+        <input type="text" id="captchaInput" placeholder="Tu respuesta"
+               class="reg-input" inputmode="numeric" />
+        <button class="reg-btn reg-btn--primary" onclick="validarCaptcha()">Validar</button>
+    </div>
+</div>
+
+<script>
+    // ── Límites y sus alertas
+    const limites = [
+        { id: "Nombres",         warn: "warnNombres",  max: 15 },
+        { id: "ApellidoPaterno", warn: "warnPaterno",  max: 10 },
+        { id: "ApellidoMaterno", warn: "warnMaterno",  max: 10 },
+        { id: "Email",           warn: "warnEmail",    max: 40 },
+        { id: "Password",        warn: "warnPassword", max: 20 },
+    ];
+
+    limites.forEach(({ id, warn, max }) => {
+        const input   = document.getElementById(id);
+        const warnEl  = document.getElementById(warn);
+        input.addEventListener("input", () => {
+            warnEl.classList.toggle("visible", input.value.length >= max);
+        });
+    });
+
+    // ── Toggle contraseña
+    document.getElementById("togglePwd").addEventListener("click", function () {
+        const pwd  = document.getElementById("Password");
+        const icon = document.getElementById("eyeIcon");
+        if (pwd.type === "password") {
+            pwd.type = "text";
+            icon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>`;
+        } else {
+            pwd.type = "password";
+            icon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+        }
+    });
+
+    // ── CAPTCHA
+    const a         = Math.floor(Math.random() * 10) + 1;
+    const b         = Math.floor(Math.random() * 10) + 1;
+    const resultado = a + b;
+
+    document.getElementById("captchaPregunta").textContent = `¿Cuánto es ${a} + ${b}?`;
+    document.getElementById("captchaModal").style.display  = "none";
+
+    function abrirCaptcha() {
+        document.getElementById("captchaModal").style.display = "flex";
+        document.getElementById("captchaInput").focus();
+    }
+
+    function validarCaptcha() {
+        if (parseInt(document.getElementById("captchaInput").value) === resultado) {
+            document.getElementById("captchaRespuesta").value     = resultado;
+            document.getElementById("captchaModal").style.display = "none";
+            document.getElementById("btnCaptcha").style.display   = "none";
+            document.getElementById("btnRegistro").style.display  = "flex";
+        } else {
+            document.getElementById("captchaInput").classList.add("input--error");
+            setTimeout(() => document.getElementById("captchaInput").classList.remove("input--error"), 600);
+        }
+    }
+
+    document.getElementById("captchaInput").addEventListener("keypress", e => {
+        if (e.key === "Enter") { e.preventDefault(); validarCaptcha(); }
+    });
+</script>

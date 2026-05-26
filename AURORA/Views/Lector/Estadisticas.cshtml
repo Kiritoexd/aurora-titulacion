@@ -1,0 +1,252 @@
+﻿@using System.Text.Json
+@model AURORA.ViewModels.EstadisticasViewModel
+
+<link rel="stylesheet" href="~/css/Estadisticas.css" asp-append-version="true" />
+
+<div class="est-wrapper">
+
+    <div class="est-header">
+        <h1 class="est-title">Estadísticas</h1>
+        <p class="est-subtitle">Tu actividad lectora de un vistazo</p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="est-kpis">
+        <div class="est-kpi">
+            <span class="est-kpi-value">@Model.LibrosTerminados</span>
+            <span class="est-kpi-label">Terminados</span>
+        </div>
+        <div class="est-kpi">
+            <span class="est-kpi-value">@Model.LibrosLeyendo</span>
+            <span class="est-kpi-label">Leyendo</span>
+        </div>
+        <div class="est-kpi">
+            <span class="est-kpi-value">@Model.LibrosPendientes</span>
+            <span class="est-kpi-label">Pendientes</span>
+        </div>
+        <div class="est-kpi">
+            <span class="est-kpi-value">@Model.TiempoTotalFormateado</span>
+            <span class="est-kpi-label">Tiempo total</span>
+        </div>
+    </div>
+
+    <!-- Charts grid -->
+    <div class="est-grid">
+
+        <div class="est-card est-card--sm">
+            <p class="est-card-title">Estado de libros</p>
+            <div class="est-chart-wrap">
+                <canvas id="estadoChart"></canvas>
+            </div>
+        </div>
+
+        <div class="est-card est-card--sm">
+            <p class="est-card-title">Géneros favoritos</p>
+            <div class="est-chart-wrap">
+                <canvas id="generosChart"></canvas>
+            </div>
+        </div>
+
+        <div class="est-card est-card--wide">
+            <p class="est-card-title">Tiempo de lectura mensual</p>
+            <div class="est-chart-wrap">
+                <canvas id="tiempoChart"></canvas>
+            </div>
+        </div>
+
+        <div class="est-card est-card--md">
+            <p class="est-card-title">Libros leídos por año</p>
+            <div class="est-chart-wrap">
+                <canvas id="anualChart"></canvas>
+            </div>
+        </div>
+
+        <div class="est-card est-card--md">
+            <p class="est-card-title">Promedio de minutos por sesión</p>
+            <div class="est-chart-wrap">
+                <canvas id="promedioChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const teal400 = '#1D9E75';
+        const teal100 = '#9FE1CB';
+        const teal50  = '#E1F5EE';
+        const teal600 = '#0F6E56';
+        const muted   = '#a8cfc2';
+        const gridCol = 'rgba(15,110,86,0.08)';
+        const textCol = '#0f2d24';
+
+        Chart.defaults.font.family = "'DM Sans', system-ui, sans-serif";
+        Chart.defaults.font.size   = 12;
+        Chart.defaults.color       = '#4a7a66';
+
+        const axisStyle = {
+        ticks: { color: '#4a7a66' },
+        grid:  { color: gridCol }
+        };
+
+        // ── Estado de libros (doughnut)
+        new Chart(document.getElementById('estadoChart'), {
+        type: 'doughnut',
+        data: {
+        labels: ['Pendientes', 'Leyendo', 'Terminados'],
+        datasets: [{
+        data: [@Model.LibrosPendientes, @Model.LibrosLeyendo, @Model.LibrosTerminados],
+        backgroundColor: [teal50, teal100, teal400],
+        borderColor: '#fff',
+        borderWidth: 3,
+        hoverOffset: 6
+        }]
+        },
+        options: {
+        cutout: '68%',
+        plugins: {
+        legend: {
+        position: 'bottom',
+        labels: { color: '#4a7a66', padding: 16, boxWidth: 10, boxHeight: 10 }
+        }
+        }
+        }
+        });
+
+        // ── Géneros (bar horizontal)
+        var generos          = @Html.Raw(JsonSerializer.Serialize(Model.Generos ?? new List<string>()));
+        var cantidadPorGenero = @Html.Raw(JsonSerializer.Serialize(Model.CantidadPorGenero ?? new List<int>()));
+        new Chart(document.getElementById('generosChart'), {
+        type: 'bar',
+        data: {
+        labels: generos,
+        datasets: [{
+        data: cantidadPorGenero,
+        backgroundColor: teal100,
+        hoverBackgroundColor: teal400,
+        borderRadius: 4,
+        borderSkipped: false
+        }]
+        },
+        options: {
+        indexAxis: 'y',
+        scales: {
+        x: axisStyle,
+        y: { ticks: { color: '#4a7a66' }, grid: { display: false } }
+        },
+        plugins: { legend: { display: false } }
+        }
+        });
+
+        // ── Tiempo de lectura (line)
+        var meses         = @Html.Raw(JsonSerializer.Serialize(Model.Meses ?? new List<string>()));
+        var minutosPorMes = @Html.Raw(JsonSerializer.Serialize(Model.MinutosPorMes ?? new List<int>()));
+        new Chart(document.getElementById('tiempoChart'), {
+        type: 'line',
+        data: {
+        labels: meses,
+        datasets: [{
+        label: 'Minutos',
+        data: minutosPorMes,
+        borderColor: teal400,
+        backgroundColor: 'rgba(29,158,117,0.08)',
+        pointBackgroundColor: teal400,
+        pointBorderColor: '#fff',
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        fill: true,
+        tension: 0.4
+        }]
+        },
+        options: {
+        scales: {
+        x: axisStyle,
+        y: {
+        ...axisStyle,
+        ticks: {
+        ...axisStyle.ticks,
+        callback: function(value) {
+        var h = Math.floor(value / 60);
+        var m = value % 60;
+        return h > 0 ? h + 'h ' + m + 'm' : m + 'm';
+        }
+        }
+        }
+        },
+        plugins: {
+        legend: { display: false },
+        tooltip: {
+        callbacks: {
+        label: function(ctx) {
+        var val = ctx.parsed.y;
+        var h = Math.floor(val / 60);
+        var m = val % 60;
+        return ' ' + (h > 0 ? h + 'h ' + m + 'm' : m + 'm');
+        }
+        }
+        }
+        }
+        }
+        });
+
+        // ── Libros por año (bar)
+        var anios        = @Html.Raw(JsonSerializer.Serialize(Model.Anios ?? new List<string>()));
+        var librosPorAnio = @Html.Raw(JsonSerializer.Serialize(Model.LibrosPorAnio ?? new List<int>()));
+        new Chart(document.getElementById('anualChart'), {
+        type: 'bar',
+        data: {
+        labels: anios,
+        datasets: [{
+        label: 'Libros',
+        data: librosPorAnio,
+        backgroundColor: teal50,
+        hoverBackgroundColor: teal400,
+        borderColor: teal100,
+        borderWidth: 1,
+        borderRadius: 4,
+        borderSkipped: false
+        }]
+        },
+        options: {
+        scales: { x: axisStyle, y: axisStyle },
+        plugins: { legend: { display: false } }
+        }
+        });
+
+        // ── Promedio sesión (bar)
+        var sesiones       = @Html.Raw(JsonSerializer.Serialize(Model.Sesiones ?? new List<string>()));
+        var promedioMinutos = @Html.Raw(JsonSerializer.Serialize(Model.PromedioMinutos ?? new List<int>()));
+        new Chart(document.getElementById('promedioChart'), {
+        type: 'bar',
+        data: {
+        labels: sesiones,
+        datasets: [{
+        label: 'Promedio min.',
+        data: promedioMinutos,
+        backgroundColor: teal100,
+        hoverBackgroundColor: teal400,
+        borderRadius: 4,
+        borderSkipped: false
+        }]
+        },
+        options: {
+        scales: { x: axisStyle, y: { ...axisStyle, beginAtZero: true } },
+        plugins: {
+        legend: { display: false },
+        tooltip: {
+        callbacks: {
+        label: function(ctx) {
+        var val = ctx.parsed.y;
+        var h = Math.floor(val / 60);
+        var m = val % 60;
+        return ' ' + (h > 0 ? h + 'h ' + m + 'm' : m + 'm');
+        }
+        }
+        }
+        }
+        }
+        });
+    </script>
+}

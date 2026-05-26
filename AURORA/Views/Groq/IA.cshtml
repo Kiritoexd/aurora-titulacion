@@ -1,0 +1,112 @@
+﻿@{
+    ViewData["Title"] = "AURORA IA";
+}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="~/css/IA.css" asp-append-version="true" />
+
+<div class="ia-wrapper">
+
+    <!-- Header -->
+    <div class="ia-header">
+        <div class="ia-header__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="1.6"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l3.5 2" />
+            </svg>
+        </div>
+        <div>
+            <h1 class="ia-header__title">Asistente AURORA</h1>
+            <p class="ia-header__sub">Inteligencia artificial a tu disposición</p>
+        </div>
+    </div>
+
+    <!-- Form card -->
+    <div class="ia-card">
+        <form asp-action="IA" method="post" id="iaForm" novalidate>
+            <div class="ia-field">
+                <label class="ia-field__label" for="prompt">Tu pregunta</label>
+                <div class="ia-field__wrap">
+                    <textarea id="prompt"
+                              name="prompt"
+                              class="ia-textarea"
+                              rows="4"
+                              placeholder="Escribe lo que querés saber..."
+                              maxlength="2000"
+                              required>@(ViewBag.Prompt ?? "")</textarea>
+                    <div class="ia-char-count"><span id="charCount">0</span> / 2000</div>
+                </div>
+            </div>
+
+            <div class="ia-actions">
+                <button type="submit" class="ia-btn" id="submitBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2.2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13" />
+                        <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    </svg>
+                    <span>Enviar</span>
+                </button>
+                <button type="button" class="ia-btn-clear" id="clearBtn">Limpiar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Response card -->
+    @if (ViewBag.Resultado != null)
+    {
+        <div class="ia-response" id="responseCard">
+            <div class="ia-response__header">
+                <div class="ia-response__dot"></div>
+                <span class="ia-response__label">Respuesta</span>
+            </div>
+            <div class="ia-response__body" id="responseBody">@ViewBag.Resultado</div>
+        </div>
+    }
+
+</div>
+
+<script>
+    const textarea  = document.getElementById('prompt');
+    const charCount = document.getElementById('charCount');
+    const clearBtn  = document.getElementById('clearBtn');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function updateCount() {
+        const len = textarea.value.length;
+        charCount.textContent = len;
+        charCount.style.color = len > 1800 ? '#e0943a' : '';
+    }
+
+    textarea.addEventListener('input', updateCount);
+    updateCount();
+
+    clearBtn.addEventListener('click', () => {
+        textarea.value = '';
+        updateCount();
+        textarea.focus();
+    });
+
+    document.getElementById('iaForm').addEventListener('submit', () => {
+        submitBtn.disabled = true;
+        submitBtn.querySelector('span').textContent = 'Procesando...';
+    });
+
+    const responseBody = document.getElementById('responseBody');
+    if (responseBody) {
+        let text = responseBody.textContent;
+        text = text.replace(/\*\*(.+?)\*\*/g, '$1');
+        text = text.replace(/\*(.+?)\*/g,     '$1');
+        text = text.replace(/__(.+?)__/g,     '$1');
+        text = text.replace(/_(.+?)_/g,       '$1');
+        text = text.replace(/^#{1,6}\s+/gm,   '');
+        text = text.replace(/`(.+?)`/g,       '$1');
+        text = text.replace(/^[\-\*]\s+/gm,   '');
+        responseBody.textContent = text;
+    }
+
+</script>

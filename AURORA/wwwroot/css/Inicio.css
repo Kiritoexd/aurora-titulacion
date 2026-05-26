@@ -1,0 +1,127 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg);
+    font-family: var(--font-body);
+}
+
+.ini-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+    /* Círculos decorativos de fondo */
+    .ini-header::before {
+        content: '';
+        position: absolute;
+        top: -100px;
+        right: -100px;
+        width: 400px;
+        height: 400px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        pointer-events: none;
+    }
+
+    .ini-header::after {
+        content: '';
+        position: absolute;
+        bottom: -80px;
+        left: -80px;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        pointer-events: none;
+    }
+
+.ini-bienvenida {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.ini-sub {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.ini-marca {
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 10vw, 8rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--teal-600);
+}
+
+.ini-usuario {
+    font-family: var(--font-body);
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+/* Línea decorativa */
+.ini-sep {
+    width: 40px;
+    height: 1.5px;
+    background: var(--teal-400);
+    border-radius: 99px;
+    opacity: 0.4;
+    margin: 4px 0;
+}
+
+/* Chips de stats debajo */
+.ini-chips {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.ini-chip {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .ini-chip i {
+        color: var(--teal-400);
+        font-size: 15px;
+    }
+
+/* Frase inspiracional */
+.ini-frase {
+    margin-top: 28px;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--text-dim);
+    font-style: italic;
+    max-width: 320px;
+    text-align: center;
+    line-height: 1.6;
+}
