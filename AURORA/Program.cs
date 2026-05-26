@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using AURORA.Models;
 using AURORA.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace AURORA
 {
@@ -15,8 +16,8 @@ namespace AURORA
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(
+    builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddSession(options =>
             {
